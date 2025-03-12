@@ -1,0 +1,33 @@
+name: Circuit Simulation and LaTeX Report
+
+on: [push, pull_request]
+
+jobs:
+  simulate-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install numpy matplotlib
+
+      - name: Run Simulation
+        run: python simulate.py
+
+      - name: Set up LaTeX
+        run: sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+
+      - name: Compile LaTeX report
+        run: pdflatex report.tex
+
+      - name: Upload PDF report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Simulation-Report
+          path: report.pdf
